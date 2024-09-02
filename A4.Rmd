@@ -1,0 +1,57 @@
+---
+title: "Assignment4"
+author: 'Aryan Thada : 210205'
+date: "2024-07-02"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+{Q1}
+
+```{r}
+#install.packages("readr")
+library(readr)   
+library(dplyr)   
+library(brms)    
+
+
+df_powerpose <- read_csv("df_powerpose.csv")
+
+
+head(df_powerpose)
+
+
+
+priors <- c(
+  set_prior("normal(0, 10)", class = "Intercept"),  # Prior for the intercept
+  set_prior("normal(0, 5)", class = "b"),           # Prior for the slopes
+  set_prior("cauchy(0, 2)", class = "sigma")        # Prior for the residual standard deviation
+)
+
+
+formula <- bf(testm2 ~ hptreat + testm1)
+
+
+fit <- brm(formula, data = df_powerpose, prior = priors, 
+           chains = 4, iter = 2000, warmup = 1000, seed = 123)
+
+
+summary(fit)
+
+
+
+plot(fit)
+
+
+pp_check(fit)
+
+
+summary(fit)
+
+```
